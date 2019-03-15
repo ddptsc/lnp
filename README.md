@@ -18,6 +18,6 @@ docker build --tag lnmp/php -f nginx-dockerfile .
 docker build --tag lnmp/php -f phpto-dockerfile .  
 
 进入php容器  
-docker exec -it php /bin/bash  
+docker exec -it lnmp_php /bin/bash  
 
 
