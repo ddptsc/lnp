@@ -8,14 +8,14 @@ docker-compose -f lnmp.yml up -d
 cd dockerfile  
 
 生成php容器  
-docker run -d --name phpto -p 9001:9000 -v E:/lnmp/www:/usr/local/nginx/html/ -it lnmp/php  
+docker run -d --name lnmp_php -p 9002:9000 -v ./www:/usr/local/nginx/html/ -it lnmp_lnmp_php
 生成nginx容器  
-docker run -d --name nginxto -d -p 8002:80 -v E:/lnmp/www:/usr/local/nginx/html/ -v E:/lnmp/config/nginx.conf:/usr/local/nginx/conf/nginx.conf --link phpto:php -it lnmp/nginxto  
+docker run -d --name lnmp_nginx -d -p 8002:80 -v ./www:/usr/local/nginx/html/ -v ./config/nginx.conf:/usr/local/nginx/conf/nginx.conf --link lnmp_php:php -it lnmp_lnmp_nginx  
 
 构建php镜像  
-docker build --tag lnmp/phpto -f nginx-dockerfile .  
+docker build --tag lnmp/php -f nginx-dockerfile .  
 构建nginx镜像  
-docker build --tag lnmp/phpto -f phpto-dockerfile .  
+docker build --tag lnmp/php -f phpto-dockerfile .  
 
 进入php容器  
 docker exec -it php /bin/bash  
