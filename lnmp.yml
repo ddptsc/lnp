@@ -1,0 +1,29 @@
+ 
+version: '2.0'
+services:
+  lnmp_php:
+    build:
+        context: ./dockerfile
+        dockerfile: php-dockerfile
+    ports:
+      - 9001:9000
+    volumes:
+      - ./www/:/usr/local/nginx/html/:rw
+    container_name: php
+    restart : always
+  lnmp_nginx:
+    build:
+        context: ./dockerfile
+        dockerfile: nginx-dockerfile
+    ports:
+      - 8001:80
+      - 433:433
+    volumes:
+      - ./www/:/usr/local/nginx/html/:rw
+      - ./config/vhost/:/usr/local/nginx/conf/vhost/:rw
+      - ./config/nginx.conf:/usr/local/nginx/conf/nginx.conf:ro
+    container_name: nginx
+    links:
+        - lnmp_php:php
+    restart: always
+
