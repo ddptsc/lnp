@@ -1,0 +1,24 @@
+ 
+version: '2.0'
+services:
+
+
+  lnmp_mysql:
+    image: mysql:8.0
+    ports:
+      - 3307:3306
+    volumes:
+      - ./MysqlData/:/var/lib/mysql:rw
+      - ./config/mysql/my.cnf:/etc/my.cnf:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    container_name: mysql
+    networks:
+      - default
+    restart: always
+    
+    
+    
+
+    
+
