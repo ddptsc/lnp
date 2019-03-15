@@ -12,12 +12,12 @@ docker run -d --name phpto -p 9001:9000 -v E:/lnmp/www:/usr/local/nginx/html/ -i
 生成nginx容器  
 docker run -d --name nginxto -d -p 8002:80 -v E:/lnmp/www:/usr/local/nginx/html/ -v E:/lnmp/config/nginx.conf:/usr/local/nginx/conf/nginx.conf --link phpto:php -it lnmp/nginxto  
 
-构建php镜像
-docker build --tag lnmp/phpto -f nginx-dockerfile .
-构建nginx镜像
-docker build --tag lnmp/phpto -f phpto-dockerfile .
+构建php镜像  
+docker build --tag lnmp/phpto -f nginx-dockerfile .  
+构建nginx镜像  
+docker build --tag lnmp/phpto -f phpto-dockerfile .  
 
-进入php容器
-docker exec -it php /bin/bash
+进入php容器  
+docker exec -it php /bin/bash  
 
 
