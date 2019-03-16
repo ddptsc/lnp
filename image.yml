@@ -1,21 +1,66 @@
  
 version: '2.0'
 services:
-
-
+  lnmp_redis:
+    image: redis:5.0
+    ports:
+      - 6378:6379
+    volumes:
+      - ${REDIS_CNF}:/etc/redis/redis.conf:ro
+      - ${REDIS_DATA}:/data:rw
+    command: /usr/local/bin/redis-server /etc/redis/redis.conf
+    container_name: redis
+    networks:
+      - default
+    restart: always
+    
+    
   lnmp_mysql:
     image: mysql:8.0
     ports:
       - 3307:3306
     volumes:
-      - ./MysqlData/:/var/lib/mysql:rw
-      - ./config/mysql/my.cnf:/etc/my.cnf:ro
+     - ${MYSQL_CNF}:/etc/my.cnf:ro
+     - ${MYSQL_DATA}:/var/lib/mysql:rw
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     container_name: mysql
     networks:
       - default
     restart: always
+    
+    
+  lnmp_php:
+    image: ddptscqq/lnmp_php
+    ports:
+      - 9001:9000
+    volumes:
+      - ${HTML_DIR}:/usr/local/nginx/html/:rw
+    links:
+        - lnmp_mysql:mysql
+        - lnmp_redis:redis
+    container_name: php
+    networks:
+      - default
+    restart : always
+    
+
+  lnmp_nginx:
+    image: ddptscqq/lnmp_nginx
+    ports:
+      - 8001:80
+      - 433:433
+    volumes:
+      - ${HTML_DIR}:/usr/local/nginx/html/:rw
+      - ${NGINX_VHOST}:/usr/local/nginx/conf/vhost/:rw
+      - ${NGINX_CNF}:/usr/local/nginx/conf/nginx.conf:ro
+    links:
+        - lnmp_php:php
+    container_name: nginx
+    networks:
+      - default
+    restart: always
+
     
     
     
