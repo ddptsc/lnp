@@ -8,7 +8,7 @@ services:
     ports:
       - 9001:9000
     volumes:
-      - ./www/:/usr/local/nginx/html/:rw
+      - ${HTML_DIR}:/usr/local/nginx/html/:rw
     container_name: php
     restart : always
   lnmp_nginx:
@@ -19,9 +19,10 @@ services:
       - 8001:80
       - 433:433
     volumes:
-      - ./www/:/usr/local/nginx/html/:rw
-      - ./config/vhost/:/usr/local/nginx/conf/vhost/:rw
-      - ./config/nginx.conf:/usr/local/nginx/conf/nginx.conf:ro
+      - ${HTML_DIR}:/usr/local/nginx/html/:rw
+      - ${NGINX_LOG}:/usr/local/nginx/logs/:rw
+      - ${NGINX_VHOST}:/usr/local/nginx/conf/vhost/:rw
+      - ${NGINX_CNF}:/usr/local/nginx/conf/nginx.conf:ro
     container_name: nginx
     links:
         - lnmp_php:php
