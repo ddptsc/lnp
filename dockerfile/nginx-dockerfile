@@ -1,8 +1,12 @@
 FROM centos:centos7
 MAINTAINER deng
 WORKDIR /usr/local/src
-RUN yum install -y gcc make pcre-devel zlib-devel openssl-devel 
-COPY ./file/nginx-1.15.9.tar.gz /usr/local/src/
+RUN yum install -y gcc make pcre-devel zlib-devel openssl-devel wget
+
+#COPY ./file/nginx-1.15.9.tar.gz /usr/local/src/
+
+RUN wget http://nginx.org/download/nginx-1.15.9.tar.gz
+
 RUN tar -zxvf nginx-1.15.9.tar.gz
 WORKDIR nginx-1.15.9
 RUN ./configure   --prefix=/usr/local/nginx   --with-pcre --with-http_stub_status_module --with-http_ssl_module

@@ -39,6 +39,9 @@ services:
     links:
         - lnmp_mysql:mysql
         - lnmp_redis:redis
+    depends_on:
+      - lnmp_mysql
+      - lnmp_redis
     container_name: php
     networks:
       - default
@@ -52,10 +55,13 @@ services:
       - 433:433
     volumes:
       - ${HTML_DIR}:/usr/local/nginx/html/:rw
+      - ${NGINX_LOG}:/usr/local/nginx/logs/:rw
       - ${NGINX_VHOST}:/usr/local/nginx/conf/vhost/:rw
       - ${NGINX_CNF}:/usr/local/nginx/conf/nginx.conf:ro
     links:
         - lnmp_php:php
+    depends_on:
+      - lnmp_php
     container_name: nginx
     networks:
       - default

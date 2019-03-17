@@ -4,10 +4,17 @@ WORKDIR /usr/local/src
 RUN groupadd www
 RUN useradd -g www www
 RUN yum -y install gcc gcc-c++ libxml2 libxml2-devel bzip2 bzip2-devel libmcrypt libmcrypt-devel openssl openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel readline readline-devel libxslt-devel perl perl-devel psmisc.x86_64 recode recode-devel libtidy libtidy-devel libicu-devel libzip-devel wget autoconf
-COPY ./file/php-7.2.7.tar.gz /usr/local/src/
-COPY ./file/swoole-4.3.1.tgz /usr/local/src/
-COPY ./file/redis-4.3.0.tgz /usr/local/src/
-COPY ./file/memcached-3.1.3.tgz /usr/local/src/
+
+#COPY ./file/php-7.2.7.tar.gz /usr/local/src/
+#COPY ./file/swoole-4.3.1.tgz /usr/local/src/
+#COPY ./file/redis-4.3.0.tgz /usr/local/src/
+#COPY ./file/memcached-3.1.3.tgz /usr/local/src/
+
+RUN wget http://cn2.php.net/distributions/php-7.2.7.tar.gz
+RUN wget https://pecl.php.net/get/redis-4.3.0.tgz
+RUN wget https://pecl.php.net/get/swoole-4.3.1.tgz
+RUN wget https://pecl.php.net/get/memcached-3.1.3.tgz
+
 RUN tar -zxvf php-7.2.7.tar.gz
 WORKDIR /usr/local/src/php-7.2.7
 RUN ./configure --prefix=/usr/local/php -with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-curl --with-freetype-dir --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-libdir=lib64 --with-libxml-dir=/usr/ --with-mysqli --with-openssl --with-pcre-regex --enable-mysqlnd --with-pdo-mysql --with-pdo-sqlite --with-pear --with-png-dir --with-jpeg-dir --with-xmlrpc --with-xsl --with-zlib --with-bz2 --with-mhash --enable-bcmath --enable-libxml --enable-inline-optimization --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip --disable-fileinfo --disable-rpath --enable-intl --enable-ftp
@@ -19,12 +26,14 @@ RUN cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.
 
 RUN sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php/etc/php-fpm.d/www.conf
 
+RUN ln -s /www/wdlinux/php/bin/php /usr/local/bin/php
+RUN cd /usr/local/src && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
 
 RUN cd /usr/local/src && tar -xf swoole-4.3.1.tgz && cd swoole-4.3.1 && /usr/local/php/bin/phpize && ./configure --with-php-config=/usr/local/php/bin/php-config && make $mc && make install && echo "extension=swoole.so" >> //usr/local/php/etc/php.ini
 RUN yum -y install libmemcached-devel && cd /usr/local/src && tar -xf redis-4.3.0.tgz && cd redis-4.3.0 && /usr/local/php/bin/phpize && ./configure --with-php-config=/usr/local/php/bin/php-config && make $mc && make install && echo "extension=redis.so" >> //usr/local/php/etc/php.ini
 RUN cd /usr/local/src && tar -xf memcached-3.1.3.tgz && cd memcached-3.1.3 && /usr/local/php/bin/phpize && ./configure --with-php-config=/usr/local/php/bin/php-config && make $mc && make install && echo "extension=memcached.so" >> //usr/local/php/etc/php.ini
-
-
+RUN cd /usr/local/src && rm -rf *
 
 EXPOSE 9000
 ENTRYPOINT ["/usr/local/php/sbin/php-fpm", "-F", "-c", "/usr/local/php/etc/php.ini"]

@@ -1,10 +1,10 @@
 php下载
 http://cn2.php.net/distributions/php-7.2.7.tar.gz
-nginx下载
-http://nginx.org/download/nginx-1.15.9.tar.gz
 redis扩展下载
 https://pecl.php.net/get/redis-4.3.0.tgz
 swoole扩展下载
 https://pecl.php.net/get/swoole-4.3.1.tgz
 memcached扩展下载
 https://pecl.php.net/get/memcached-3.1.3.tgz
+nginx下载
+http://nginx.org/download/nginx-1.15.9.tar.gz
